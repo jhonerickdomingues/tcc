@@ -62,6 +62,8 @@ class Router
     private function callAction($query, $parameters = '')
     {
         $return = new ReturnData($query, $parameters);
+        //dd($return->json);
+        view("json",["json" => $return->json]);
     }
 
     public function direct($uri, $requestType)
@@ -141,7 +143,7 @@ class Router
         foreach(explode('/',end($routes)) AS $key => $value){
             if(preg_match('/:(.*)/',$value,$matches))
             {
-                $parameters[] = $uriArr[$key];
+                $parameters[$value] = $uriArr[$key];
             }else{
                 $uriFixed[] = $uriArr[$key];
             }
@@ -149,7 +151,8 @@ class Router
 
         $diferencasUri = count(array_diff($routesFixed,$uriFixed));
 
-        if($diferencasUri > 0){
+
+        if(implode('',$routesFixed) !== implode('',$uriFixed)){
             header('Content-Type: text/json');
             echo json_encode([
                 'status' => 'error',

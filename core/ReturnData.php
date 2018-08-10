@@ -8,9 +8,11 @@
 
 class ReturnData
 {
+    public $json = "";
     public function __construct($query, $parameters)
     {
-        echo $this->replacements($query, $parameters);
+        $this->json = $this->replacements($query, $parameters);
+        //return '123';
     }
 
     public function replacements($query, $parameters)
@@ -22,8 +24,7 @@ class ReturnData
                 $_PUT[explode("=", $value)[0]] = explode("=", $value)[1];
             }
         }elseif(Request::method() == "PUT"){
-            header('Content-Type: text/json');
-            echo json_encode($this->bodyJson(0, "O content-type do envio precisa ser 'application/x-www-form-urlencoded' para requisição PUT!", []));
+            return json_encode($this->bodyJson(0, "O content-type do envio precisa ser 'application/x-www-form-urlencoded' para requisição PUT!", []));
             die();
         }
 
@@ -68,18 +69,20 @@ class ReturnData
         }
 
         foreach($parameters AS $key => $value){
-            $parameters[$key] = "'".$value."'";
+            if($key != ":table"){
+                $parameters[$key] = "'".$value."'";
+            }else{
+                $parameters[$key] = "`".$value."`";
+            }
         }
-
 
         $query = str_replace($thisGET, $forThisGET, $query);
         $query = str_replace($thisPOST, $forThisPOST, $query);
         $query = str_replace($thisPUT, $forThisPUT, $query);
         $query = str_replace(["''", "``"], ["'", "`"], $query);
 
-        preg_match_all('/(:[^ \t\n\r\f\v]+)/', $query, $mat);
-        //dd(end($mat));
-        $query = str_replace(end($mat), $parameters, $query);
+        $query = str_replace(array_keys($parameters), $parameters, $query);
+
         $query = urldecode($query);
         return $this->querySQLRoute($query);
     }
@@ -96,17 +99,16 @@ class ReturnData
 
         if($statement->status()){
             if($statement->count() > 0){
-                $this->returnJson(1,$list);
+                return $this->returnJson(1,$list);
             }else{
-                $this->returnJson(2);
+                return $this->returnJson(2);
             }
         }else{
-            $this->returnJson(0,$statement->error());
+            return $this->returnJson(0,$statement->error());
         }
     }
 
     private function returnJson($status, $array = []){
-        header('Content-Type: text/json');
         switch ($status){
             case 1:
                 $json = $this->bodyJson('success', 'Query executada com sucesso!', $array);
@@ -120,7 +122,7 @@ class ReturnData
                 $json = $this->bodyJson('error', 'Erro na consulta vinculada a rota \''.Request::uri().'\'! Verifique os erros abaixo!', ["errors" => $array]);
              break;
         }
-        echo json_encode($json);
+        return json_encode($json);
     }
 
     private function bodyJson($status, $msg, $data = []){

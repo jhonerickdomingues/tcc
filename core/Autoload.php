@@ -17,6 +17,7 @@ class Autoload
 		'config.php',
 		'bootstrap.php',
 		'Autoload.php',
+		'README.md',
 		'.htaccess',
         'routes.php',
         'package-lock.json',
