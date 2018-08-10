@@ -109,15 +109,15 @@ class ReturnData
         header('Content-Type: text/json');
         switch ($status){
             case 1:
-                $json = $this->bodyJson(1, 'Query executada com sucesso!', $array);
+                $json = $this->bodyJson('success', 'Query executada com sucesso!', $array);
              break;
 
              case 2:
-                $json = $this->bodyJson(1, 'Query executada com sucesso! Mas não houve nenhuma mudança de dados!(Casos: SELECT em um valor que foi apagado, query de UPDATE com valores que já estão atualizados ou tentar usar o DELETE em um registro que não existe mais)', $array);
+                $json = $this->bodyJson('noData', 'Query executada com sucesso! Mas não houve nenhuma mudança de dados!(Casos: SELECT em um valor que foi apagado, query de UPDATE com valores que já estão atualizados ou tentar usar o DELETE em um registro que não existe mais)', $array);
              break;
 
              case 0:
-                $json = $this->bodyJson(0, 'Erro na consulta vinculada a rota \''.Request::uri().'\'! Verifique os erros abaixo!', ["errors" => $array]);
+                $json = $this->bodyJson('error', 'Erro na consulta vinculada a rota \''.Request::uri().'\'! Verifique os erros abaixo!', ["errors" => $array]);
              break;
         }
         echo json_encode($json);

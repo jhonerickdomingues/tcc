@@ -59,7 +59,7 @@ class Router
         return new static;
     }
 
-    public function callAction($query, $parameters = '')
+    private function callAction($query, $parameters = '')
     {
         $return = new ReturnData($query, $parameters);
     }
@@ -90,7 +90,12 @@ class Router
 
 
         if(!isset($routesParams)){
-            die("Não existe a URI '{$uri}' <h1>404</h1>");
+            header('Content-Type: text/json');
+            echo json_encode([
+                'status' => 'error',
+                'msg' => "Não existe a URI '{$uri}'"
+            ]);
+            die();
         }
 
         foreach($routesParams AS $value)
@@ -101,7 +106,12 @@ class Router
         }
 
         if(!isset($routes)){
-            die("Não existe a URI '{$uri}' <h1>404</h1>");
+            header('Content-Type: text/json');
+            echo json_encode([
+                'status' => 'error',
+                'msg' => "Não existe a URI '{$uri}'"
+            ]);
+            die();
         }
         //dd($routes);
         $rotaUnica = [];
@@ -140,7 +150,12 @@ class Router
         $diferencasUri = count(array_diff($routesFixed,$uriFixed));
 
         if($diferencasUri > 0){
-            die("Não existe a URI '{$uri}' <h1>404</h1>");
+            header('Content-Type: text/json');
+            echo json_encode([
+                'status' => 'error',
+                'msg' => "Não existe a URI '{$uri}'"
+            ]);
+            die();
         }
 
         /*if(!in_array(self::uri(),self::self::$routes["allow_uri"]) && self::uri() != "home"){

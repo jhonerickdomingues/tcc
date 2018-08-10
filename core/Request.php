@@ -11,9 +11,9 @@ class Request
     public static function uri(){
         global $app;
         $uri =  parse_url($_SERVER['REQUEST_URI']);
-        //echo $uri['path'].'<br>';
-        $uri['path'] = trim($uri['path'],$app['path']);
-        //echo $uri['path'].'<br>';
+        echo $uri['path'].'<br>';
+        $uri['path'] = str_replace( $app['path'], '', $uri['path']);
+        echo $uri['path'].'<br>';
         return trim($uri['path'],'/');
     }
 
