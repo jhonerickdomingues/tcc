@@ -50,7 +50,7 @@ class QueryBuilder
         return $this->lastId;
     }
 
-    public function list()
+    public function listData()
     {
         return $this->statement->fetchAll(PDO::FETCH_CLASS);
     }
