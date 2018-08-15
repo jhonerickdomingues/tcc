@@ -94,7 +94,7 @@ class ReturnData
         if(preg_match('/insert/i', $query, $mat)){
             $list = ["lastId" => $statement->lastId()];
         }else{
-            $list = $statement->list();
+            $list = $statement->listData();
         }
 
         if($statement->status()){
