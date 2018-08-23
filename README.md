@@ -1,6 +1,4 @@
-@@ -1,2 +1,14 @@
-# tcc
-TCC 
+
  <h1>Funcionamento do protótipo do gerador de API</h1>
 <p>
   <h3>Funcionamento básico</h3>
